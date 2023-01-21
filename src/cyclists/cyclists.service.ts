@@ -18,20 +18,33 @@ export class CyclistsService {
     }
 
     getSingleCyclist(cyclistId: string){
-        const cyclist = this.findCyclist(cyclistId)
+        const cyclist = this.findCyclist(cyclistId)[0]
         return {...cyclist}
     }
 
     updateCyclist(cyclistId: string, firstName: string, lastName: string, country : string, team: string, ranking: number){
+        const [cyclist, index] = this.findCyclist(cyclistId)
+        const updatedCyclist = {...cyclist}
+        updatedCyclist.firstName = firstName
+        updatedCyclist.lastName = lastName
+        updatedCyclist.country = country
+        updatedCyclist.team = team
+        updatedCyclist.ranking = ranking
+        this.cyclists[index] = {...updatedCyclist}
 
+        
+        console.log(updatedCyclist);
+        
+        return cyclistId;
     }
 
-    private findCyclist(cyclistId: string){
-        const cyclist = this.cyclists.find(cyclist => cyclist.id == cyclistId)
-        if (!cyclist) {
+    private findCyclist(cyclistId: string) :[Cyclist, number]{
+        const cyclistIndex = this.cyclists.findIndex(cyclist => cyclist.id === cyclistId)
+        const cyclist = this.cyclists[cyclistIndex]
+        if (!cyclistIndex) {
             throw new NotFoundException(' Cyclist not found')
         }
-        return cyclist
+        return [cyclist, cyclistIndex]
 
     }
 }
