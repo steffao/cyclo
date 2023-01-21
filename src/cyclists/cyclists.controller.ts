@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, Patch } from "@nestjs/common";
+import { Controller, Post, Get, Body, Param, Put } from "@nestjs/common";
 import { CyclistsService } from './cyclists.service'
 
 @Controller('cyclists')
@@ -33,7 +33,7 @@ export class CyclistsController{
         return this.cyclistsService.getSingleCyclist(cyclistId)
     }
 
-    @Patch(':id')
+    @Put(':id')
     updateCyclist(
         @Param('id') cyclistId : string,
         @Body('firstName') cyclistFirstName: string,
@@ -41,7 +41,15 @@ export class CyclistsController{
         @Body('country') cyclistCountry: string,
         @Body('team') cyclistTeam: string,
         @Body('ranking') cyclistRanking: number,
-    ){
-
+    ) : any {
+        const generatedId = this.cyclistsService.updateCyclist(
+            cyclistId,
+            cyclistFirstName,
+            cyclistLastName,
+            cyclistCountry,
+            cyclistTeam,
+            cyclistRanking
+        );
+        return { id: generatedId };
     }
 }
